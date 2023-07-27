@@ -11,16 +11,26 @@ const [tasks, setTasks] = createStoredSignal<Task[]>("tasks", []);
 
 const App: Component = () => {
   return (
-    <>
+    <div style="margin: 20px">
       <p>
         <strong>We welcome human resource called Salaryman</strong>
       </p>
-      <For each={tasks()} fallback={<p>No tasks.</p>}>
-        {(task) => <p>{task.name}</p>}
-      </For>
+      <Tasks />
       <AddNewTask />
-    </>
+    </div>
   );
+};
+
+const Tasks = () => {
+  return (
+    <For each={tasks()} fallback={<p>No tasks.</p>}>
+      {(task) => <TaskComponent task={task} />}
+    </For>
+  );
+};
+
+const TaskComponent = (props: { task: Task }) => {
+  return <p>{props.task.name}</p>;
 };
 
 const AddNewTask = () => {
