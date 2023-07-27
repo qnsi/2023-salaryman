@@ -1,42 +1,13 @@
-import {
-  createSignal,
-  type Component,
-  createResource,
-  For,
-  JSX,
-  Signal,
-} from "solid-js";
-import { createStore, Store } from "solid-js/store";
+import { createSignal, type Component, For, JSX } from "solid-js";
+
+import createStoredSignal from "./helpers/storedSignal";
 
 type Task = {
   name: string;
 };
 
-// type TObject = T extends object
-// https://stackoverflow.com/questions/70030144/how-to-update-local-storage-values-in-solidjs-using-hooks
-function createStoredSignal<T>(
-  key: string,
-  defaultValue: T[],
-  storage = localStorage,
-): Store<T> {
-  const initialValue = storage.getItem(key)
-    ? (JSON.parse(storage.getItem(key) || "") as T[])
-    : defaultValue;
-
-  const [value, setValue] = createStore(initialValue);
-
-  const setValueAndStore = ((arg: T[]) => {
-    const v = setValue(arg);
-    storage.setItem(key, JSON.stringify(v));
-    return v;
-  }) as typeof setValue;
-
-  return [value, setValueAndStore];
-}
-
 const [taskName, setTaskName] = createSignal("");
-// const [tasks, setTasks] = createStore<Task[]>([]);
-const [tasks, setTasks] = createStoredSignal<Task>("tasks", []);
+const [tasks, setTasks] = createStoredSignal<Task[]>("tasks", []);
 
 const App: Component = () => {
   return (
